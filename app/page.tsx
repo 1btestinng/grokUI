@@ -1,7 +1,10 @@
 "use client";
 
+import { ArrowUpRight, Copy, PenLine, Share2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+const MAX_LENGTH = 600;
 
 export default function Home() {
   const [message, setMessage] = useState("");
@@ -15,35 +18,63 @@ export default function Home() {
       setError("Write a message first.");
       return;
     }
+
     setBusy(true);
     setError("");
     const id = crypto.randomUUID().replaceAll("-", "").slice(0, 12);
     const encoded = encodeURIComponent(trimmed);
-    setTimeout(() => router.push(`/card/${id}?m=${encoded}`), 280);
+    window.setTimeout(() => router.push(`/card/${id}?m=${encoded}`), 220);
   }
 
   return (
     <main className="shell">
       <header className="topbar">
-        <div className="brand">note</div>
-        <div className="tag">made to be shared</div>
+        <a className="brand-lockup" href="/" aria-label="Note home">
+          <span className="mark" aria-hidden="true"><PenLine size={16} strokeWidth={1.7} /></span>
+          <span className="brand">note</span>
+        </a>
+        <span className="header-note">private correspondence</span>
       </header>
-      <section className="hero">
+
+      <section className="hero" aria-labelledby="page-title">
         <div className="eyebrow">A little something</div>
-        <h1>Say something worth keeping.</h1>
-        <p className="sub">Write a message. Turn it into a beautiful card. Send it to someone.</p>
+        <h1 id="page-title">Say something worth keeping.</h1>
+        <p className="sub">Write a few words. We&apos;ll turn them into a card worth sending.</p>
+
         <div className="card-wrap">
-          <div className="editor">
-            <textarea maxLength={600} value={message} onChange={(e) => { setMessage(e.target.value); setError(""); }} placeholder="Write your message here..." aria-label="Your message" autoFocus />
-            <div className="editor-foot"><span>Private by default</span><span>{message.length} / 600</span></div>
+          <div className={`editor ${message ? "has-content" : ""}`}>
+            <label className="sr-only" htmlFor="message">Your message</label>
+            <textarea
+              id="message"
+              maxLength={MAX_LENGTH}
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value);
+                setError("");
+              }}
+              placeholder="Write your message..."
+              autoFocus
+            />
+            <div className="editor-foot">
+              <span>Up to {MAX_LENGTH} characters</span>
+              <span className={message.length === MAX_LENGTH ? "counter-limit" : "counter"} aria-live="polite">
+                {message.length} / {MAX_LENGTH}
+              </span>
+            </div>
           </div>
+
           <button className="cta" onClick={createCard} disabled={busy || !message.trim()}>
-            {busy ? "Making your card…" : "Create Card"}{!busy && <span aria-hidden="true">→</span>}
+            <span>{busy ? "Making your card…" : "Create Card"}</span>
+            {!busy && <ArrowUpRight size={17} strokeWidth={1.8} aria-hidden="true" />}
           </button>
+
           {error && <div className="error" role="alert">{error}</div>}
         </div>
       </section>
-      <footer className="footer">Small words. Beautifully sent.</footer>
+
+      <footer className="footer">
+        <span>Small words. Beautifully sent.</span>
+      </footer>
     </main>
   );
 }
