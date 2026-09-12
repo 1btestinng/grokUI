@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const siteUrl = "https://grok-ui-a1-5dae.vercel.app";
+
 export const metadata: Metadata = {
-  title: "A note worth keeping",
-  description: "Turn a few words into a beautiful card and send it to someone.",
-  metadataBase: new URL("https://grok-ui.vercel.app"),
+  metadataBase: new URL(siteUrl),
+  title: "note — say something worth keeping",
+  description: "Write a few words. Turn them into a beautiful card. Send it to someone.",
   openGraph: {
-    title: "A note worth keeping",
+    title: "note — say something worth keeping",
     description: "A small message, made beautiful.",
     type: "website",
+    url: siteUrl,
   },
   twitter: {
-    card: "summary_large_image",
-    title: "A note worth keeping",
+    card: "summary",
+    title: "note — say something worth keeping",
     description: "A small message, made beautiful.",
   },
 };
