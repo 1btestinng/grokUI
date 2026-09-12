@@ -18,8 +18,8 @@ export default function Home() {
     setBusy(true);
     setError("");
     const id = crypto.randomUUID().replaceAll("-", "").slice(0, 12);
-    sessionStorage.setItem(`card:${id}`, trimmed);
-    setTimeout(() => router.push(`/card/${id}`), 280);
+    const encoded = encodeURIComponent(trimmed);
+    setTimeout(() => router.push(`/card/${id}?m=${encoded}`), 280);
   }
 
   return (
@@ -34,22 +34,11 @@ export default function Home() {
         <p className="sub">Write a message. Turn it into a beautiful card. Send it to someone.</p>
         <div className="card-wrap">
           <div className="editor">
-            <textarea
-              maxLength={600}
-              value={message}
-              onChange={(e) => { setMessage(e.target.value); setError(""); }}
-              placeholder="Write your message here..."
-              aria-label="Your message"
-              autoFocus
-            />
-            <div className="editor-foot">
-              <span>Private by default</span>
-              <span>{message.length} / 600</span>
-            </div>
+            <textarea maxLength={600} value={message} onChange={(e) => { setMessage(e.target.value); setError(""); }} placeholder="Write your message here..." aria-label="Your message" autoFocus />
+            <div className="editor-foot"><span>Private by default</span><span>{message.length} / 600</span></div>
           </div>
           <button className="cta" onClick={createCard} disabled={busy || !message.trim()}>
-            {busy ? "Making your card…" : "Create Card"}
-            {!busy && <span aria-hidden="true">→</span>}
+            {busy ? "Making your card…" : "Create Card"}{!busy && <span aria-hidden="true">→</span>}
           </button>
           {error && <div className="error" role="alert">{error}</div>}
         </div>
